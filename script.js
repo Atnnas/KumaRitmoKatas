@@ -114,6 +114,15 @@ window.onload = function () {
         if (isAuthenticated) {
           // SUCCESS
           initAudio(); // Unlock audio context
+
+          // Show User Profile
+          const profile = document.getElementById('user-profile');
+          const nameDisplay = document.getElementById('user-name-display');
+          if (profile && nameDisplay) {
+            nameDisplay.innerText = "Sensei " + inputUser;
+            profile.style.display = 'flex';
+          } // Modified here
+
           const splash = document.getElementById('splash-screen');
           if (splash) {
             splash.classList.add('fade-out');
@@ -133,6 +142,16 @@ window.onload = function () {
         resetButton(btnEnter, originalText);
       }
     });
+
+    // LOGOFF LOGIC
+    const btnLogoff = document.getElementById('btn-logoff');
+    if (btnLogoff) {
+      btnLogoff.addEventListener('click', function () {
+        if (confirm("¿Cerrar Sesión?")) {
+          location.reload();
+        }
+      });
+    }
   }
 };
 
