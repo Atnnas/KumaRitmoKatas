@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dojo Kuma - Ritmo en Kata Pro</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Roboto+Mono:wght@500;700&family=Noto+Serif+JP:wght@700&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="header-container">
+        <img src="logoKuma.jpg" alt="Logo Dojo Kuma" class="logo-img"
+            onerror="this.style.display='none'; document.getElementById('alt-logo').style.display='block'">
+        <span id="alt-logo" style="display:none; font-size:2rem; color:white;">🐻</span>
+
+        <div class="brand-title">
+            <h1>DOJO KUMA</h1>
+            <h2>hyōshiKata <span
+                    style="display:block; font-family: 'Noto Serif JP', serif; font-size: 1.4rem; letter-spacing: 1px; margin-top: 5px; text-transform: none;">拍子型</span>
+            </h2>
+        </div>
+    </div>
+
+    <div id="status-display">Listo. Usa **ESPACIO** (PC) o el botón **RITMO** (Móvil) para grabar.</div>
+    <div id="countdown-overlay"></div>
+
+    <div class="timer-display" id="main-timer">00:00.0</div>
+
+    <div class="loop-controls">
+        <span class="loop-label">LOOP:</span>
+        <button class="btn-loop-set" onclick="setLoopPoint('A')"><i class="material-icons">A</i></button>
+        <button class="btn-loop-set" onclick="setLoopPoint('B')"><i class="material-icons">B</i></button>
+        <button class="btn-loop-toggle" id="btn-loop-toggle" onclick="toggleLoop()">OFF</button>
+
+        <div class="training-config-container"></div>
+        <!-- Reps Card -->
+        <div class="control-card">
+            <span class="card-title">REPS</span>
+            <div class="stepper">
+                <button class="step-btn" onclick="adjInput('loop-reps-input', -1)">-</button>
+                <input type="number" id="loop-reps-input" class="big-input" value="0">
+                <button class="step-btn" onclick="adjInput('loop-reps-input', 1)">+</button>
+            </div>
+        </div>
+        <!-- Rest Card -->
+        <div class="control-card">
+            <span class="card-title">REST (s)</span>
+            <div class="stepper">
+                <button class="step-btn" onclick="adjInput('loop-rest-input', -0.5)">-</button>
+                <input type="number" id="loop-rest-input" class="big-input" value="0">
+                <button class="step-btn" onclick="adjInput('loop-rest-input', 0.5)">+</button>
+            </div>
+        </div>
+        <span id="loop-counter-display"
+            style="font-family:monospace; color:var(--timeline-pulse); margin-left:5px; font-weight:bold; font-size: 1.2rem; align-self: center;">0/0</span>
+    </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-record" onclick="startRecording()">🔴 GRABAR</button>
+        <button class="btn-stop" onclick="stopSystem()">⏹ PARAR</button>
+        <button class="btn-pause" onclick="pauseSystem()">⏸ PAUSA</button>
+        <button class="btn-train" onclick="startTraining()">▶ ENTRENAR / Reanudar</button>
+        <button class="btn-clear" onclick="clearCurrent()">🗑 LIMPIAR</button>
+
+        <div class="volume-control">
+            <label for="volume-slider">Volumen Global:</label>
+            <input type="range" id="volume-slider" min="0" max="100" value="50" oninput="setMasterVolume(this.value)" />
+            <span id="volume-percent">50%</span>
+        </div>
+    </div>
+
+    <div class="library-panel">
+        <input type="text" id="kata-name-input" placeholder="Nombre del Kata..." value="">
+        <button class="btn-save" onclick="saveKataToLibrary()">💾 Guardar</button>
+        <div style="flex-basis: 100%; height: 5px;"></div>
+        <button class="kata-list-btn" onclick="openLibraryWindow()">📂 Abrir Biblioteca</button>
+        <button class="btn-export" onclick="exportLibrary()">⬇ Exportar</button>
+        <button class="btn-import" onclick="document.getElementById('file-input').click()">⬆ Importar</button>
+        <input type="file" id="file-input" style="display: none;" accept=".json" onchange="importLibrary(this)">
+    </div>
+
+    <div class="main-workspace">
+        <div class="timeline-container" id="timeline-container">
+            <canvas id="timelineCanvas"></canvas>
+            <div id="visual-feedback"></div>
+        </div>
+
+        <div id="rhythm-log">
+            <div style="text-align: center; color: #5d4037; padding-top: 20px;">Esperando Sensei...</div>
+        </div>
+
+        <!-- VISTA DE ENTRENAMIENTO (FOCUS MODE) -->
+        <div id="focus-display" style="display:none;">
+            <div id="focus-icon">🥋</div>
+            <div id="focus-name">Preparado</div>
+            <div id="focus-info">Esperando inicio...</div>
+        </div>
+    </div>
+
+    <div id="mobile-controls-bar">
+        <div class="mobile-btn-container">
+            <button class="mobile-btn" id="btn-ritmo">RITMO (HOLD/HIT)</button>
+            <button class="mobile-btn" id="btn-pulse">PULSO (BEEP)</button>
+        </div>
+    </div>
+
+    <!-- MODAL LIBRARY -->
+    <div id="library-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeLibraryWindow()">&times;</span>
+            <h2 style="margin-top:0; color:var(--kuma-red); border-bottom: 2px solid #4e342e; padding-bottom: 10px;">
+                BIBLIOTECA</h2>
+            <div id="modal-list-container"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
