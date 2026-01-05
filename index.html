@@ -1,15 +1,41 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dojo Kuma - Ritmo en Kata Pro</title>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Roboto+Mono:wght@500;700&family=Noto+Serif+JP:wght@700&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Roboto+Mono:wght@500;700&family=Noto+Serif+JP:wght@700&family=Roboto+Condensed:wght@700&display=swap"
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+
+    <!-- PANTALLA DE BIENVENIDA (SPLASH SCREEN) -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <div class="splash-logo-container">
+                <img src="logoKuma.jpg" alt="Logo Kuma" class="splash-logo animate__animated animate__zoomIn">
+            </div>
+            <h1 class="splash-title animate__animated animate__fadeInDown">hyōshiKata</h1>
+            <h2 class="splash-subtitle animate__animated animate__fadeInUp">拍子型</h2>
+
+            <div class="login-container animate__animated animate__fadeInUp" style="animation-delay: 0.5s;">
+                <input type="text" id="login-user" class="login-input" placeholder="Usuario / Sensei"
+                    autocomplete="off">
+                <input type="password" id="login-pass" class="login-input" placeholder="Contraseña">
+                <div id="login-error" class="login-error-msg">Credenciales Incorrectas</div>
+            </div>
+
+            <button id="btn-enter-app"
+                class="splash-btn animate__animated animate__pulse animate__infinite">ENTRAR</button>
+        </div>
+    </div>
 
     <div class="header-container">
         <img src="logoKuma.jpg" alt="Logo Dojo Kuma" class="logo-img"
@@ -118,6 +144,10 @@
         </div>
     </div>
 
+    <script src="data.js"></script>
+    <script src="audio_engine.js"></script>
+    <script src="ui_manager.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>
